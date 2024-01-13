@@ -1,5 +1,4 @@
 module.exports = {
-  mongoUrl:
-    "mongodb+srv://mqumailr:RjzdkY4TEQ54sqn9@cluster0.eqv8bxg.mongodb.net/?retryWrites=true&w=majority",
-  jwtKey: "mechanify",
+  mongoUrl:process.env.DB_CONNECT_URL,
+  jwtKey: process.env.JWT_KEY,
 };
