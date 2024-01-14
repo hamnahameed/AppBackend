@@ -9,10 +9,9 @@ module.exports = (req, res , next) => {
      return res.status(401).send({error: 'Not Authorized!'})
     }
     const token = authorization.replace('Bearer ', "");
-    console.log('token', token)
     jwt.verify(token, jwtKey, async (err, payload) => {
         if(err){
-            return res.status(401).send({error: 'Not Authorized!'})
+            return res.status(401).send({error: 'Not Authorized!, please login to continue...'})
         }
 
         const {userId} = payload;
