@@ -6,12 +6,12 @@ const User = mongoogse.model('User');
 module.exports = (req, res , next) => {
     const {authorization} = req.headers;
     if(!authorization){ 
-     return res.status(401).send({error: 'Not Authorized!'})
+     return res.status(401).send({error: 'Not Authorized!, Please Login to continue or contact admin for access right...'})
     }
     const token = authorization.replace('Bearer ', "");
     jwt.verify(token, jwtKey, async (err, payload) => {
         if(err){
-            return res.status(401).send({error: 'Not Authorized!, please login to continue...'})
+            return res.status(401).send({error: 'Not Authorized!, Please Login to continue or contact admin for access right...'})
         }
 
         const {userId} = payload;
