@@ -18,7 +18,7 @@ router.post("/signup", async (req, res) => {
     });
     await user.save();
     const token = jwt.sign({ userId: user._id }, jwtKey);
-    res.status(200).send({ msg: "created user successfully", token });
+    res.status(200).send({ msg: "created user successfully", token, role });
   } catch (err) {
     res.status(400).send({ error: err.message });
   }
