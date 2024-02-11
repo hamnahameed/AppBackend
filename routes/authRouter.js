@@ -1,46 +1,11 @@
-const express = require("express");
-const mongoose = require("mongoose");
+const express = require('express');
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const { jwtKey } = require("../config");
+const {signUp,login,getUser,updateUser} = require('../controllers/authControllers');
+const jwt = require("../middlewares/jwtMiddleware")
 
-const User = mongoose.model("User");
-
-router.post("/signup", async (req, res) => {
-  try {
-    const { username, password, role, email } = req.body;
-    console.log("email password", username, password);
-    const user = new User({
-      username,
-      password,
-      role,
-      email,
-    });
-    await user.save();
-    const token = jwt.sign({ userId: user._id }, jwtKey);
-    res.status(200).send({ msg: "created user successfully", token, role });
-  } catch (err) {
-    res.status(400).send({ error: err.message });
-  }
-});
-
-router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    console.log("username and password");
-    return res.status(422).send({ error: "invalid username or password" });
-  }
-  const user = await User.findOne({ username });
-  console.log("user", user);
-  if (!user) {
-    return res.status(422).send({ error: "invalid username or password" });
-  }
-  if (user.password === password) {
-    const token = jwt.sign({ userId: user._id }, jwtKey);
-    return res.send({ msg: "user successfully logged in", token, role: user.role });
-  }
-  return res.status(422).send({ error: "invalid username or password" });
-});
+router.post("/signup",signUp);
+router.post("/login",login);
+router.get("/getuser/:id",jwt.verifyToken,getUser);
+router.put("/updateuser/:id",jwt.verifyToken,updateUser);
 
 module.exports = router;
