@@ -5,7 +5,7 @@ const jwt = require("../middlewares/jwtMiddleware")
 
 router.post("/signup",signUp);
 router.post("/login",login);
-router.get("/getuser/:id",jwt.verifyToken,getUser);
-router.put("/updateuser/:id",jwt.verifyToken,updateUser);
+router.get("/getuser",jwt.verifyToken,getUser);
+router.put("/updateuser",jwt.verifyToken,updateUser);
 
 module.exports = router;

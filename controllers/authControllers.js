@@ -40,11 +40,9 @@ exports.signUp = async (req, res) => {
 
     await user.save();
 
-    const token = await jwt.sign(req.body);
     res.status(200).json({
       message: "User created successfully!",
       data: user,
-      token,
       status: true,
     });
   } catch (err) {
@@ -69,7 +67,7 @@ exports.login = async (req, res) => {
     }
     if (verifyHash) {
       const tokenObj = {
-        ...user,
+        userId:user._id,
       };
       const token = await jwt.sign(tokenObj);
       // User get
@@ -90,8 +88,7 @@ exports.login = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   try {
-    const {id} = req.params;
-    const user = await userModel.findOne({_id:id});
+     const user = await userModel.findOne({_id:req.userId});
     res.status(200).json({
       message: "User retrieved succesfully !!..",
       data: user,
@@ -107,7 +104,7 @@ exports.getUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const {id} = req.params;
+    
     const { username, password, address, latitude, longitude } = req.body;
     // If fields are missing
     if (!username || !password) {
@@ -119,7 +116,7 @@ exports.updateUser = async (req, res) => {
     const hashpwd = await bcrypt.hashSync(password, salt);
 
     //update User
-    const user = await userModel.findByIdAndUpdate(id,{username,password:hashpwd,address, latitude, longitude},{new:true});
+    const user = await userModel.findByIdAndUpdate(req.userId,{username,password:hashpwd,address, latitude, longitude},{new:true});
     res.status(200).json({
       message: "User updated succesfully !!..",
       data: user,
